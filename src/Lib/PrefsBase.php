@@ -4,11 +4,10 @@
 namespace Prefs\Lib;
 
 
+use Prefs\Exception\BadPrefsEntityConfigurationException;
 use Prefs\Exception\UnknownPreferenceKeyException;
 use Prefs\Form\PreferencesForm;
 use Prefs\Model\Entity\Preference;
-use Cake\Form\Form;
-use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 
 class PrefsBase
@@ -34,9 +33,12 @@ class PrefsBase
     }
 
     /**
+     * Wrapper to Entity::for()
+     *
      * @param $path
      * @return mixed
-     * @throws \BadMethodCallException
+     * @throws BadPrefsEntityConfigurationException
+     * @throws UnknownPreferenceKeyException
      */
     public function for($path)
     {
