@@ -57,12 +57,8 @@ class Preference extends Entity
     public function for($path)
     {
         $this->validateStructure();
-        $setting = Hash::get($this->prefs ?? [], $path) ?? $this->defaults[$path];
-        if (is_null($setting)) {
-            $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
-            throw new UnknownPreferenceKeyException($msg);
-        }
-        return $setting;
+        $this->validatePath($path);
+        return Hash::get($this->prefs ?? [], $path) ?? $this->defaults[$path];
     }
 
     /**
@@ -166,11 +162,33 @@ class Preference extends Entity
         return array_merge($data, $original);
     }
 
+    /**
+     * Insure the entity was constructed properly
+     *
+     * Developer aid to guaranteed the plugin is being used properly
+     * @throws BadPrefsEntityConfigurationException
+     */
     private function validateStructure(): void
     {
         if ($this->defaults === false) {
             $msg = "Preferenes entity must have the default preference values set.";
             throw new BadPrefsEntityConfigurationException($msg);
+        }
+    }
+
+    /**
+     * Insure the path has been configured in the schema
+     *
+     * Developer aid to guarantee the plugin is configured properly
+     *
+     * @param $path
+     * @throws UnknownPreferenceKeyException
+     */
+    private function validatePath($path)
+    {
+        if (Hash::check(array_keys($this->getDefaults()), $path)) {
+            $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
+            throw new UnknownPreferenceKeyException($msg);
         }
     }
 }
