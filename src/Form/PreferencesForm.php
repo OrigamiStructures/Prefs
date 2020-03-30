@@ -1,6 +1,7 @@
 <?php
 namespace Prefs\Form;
 
+use Cake\Event\EventManager;
 use Prefs\Exception\BadPrefsImplementationException;
 use Prefs\Model\Entity\Preference;
 use Cake\Controller\Component\FlashComponent;
