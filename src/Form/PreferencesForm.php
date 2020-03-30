@@ -76,7 +76,7 @@ class PreferencesForm extends Form
      * @param Schema $schema
      * @return Schema
      */
-    protected function _buildSchema(Schema $schema)
+    protected function _buildSchema(Schema $schema):Schema
     {
         foreach ($this->prefsSchema as $field => $attributes) {
             if ($attributes['type'] == 'json') {
@@ -116,7 +116,7 @@ class PreferencesForm extends Form
      * @param array $data
      * @return bool
      */
-    public function validate($data)
+    public function validate($data):bool
     {
         $result = parent::validate(Hash::flatten($data));
         $this->setErrors(Hash::expand($this->getErrors()));
@@ -233,7 +233,7 @@ class PreferencesForm extends Form
         return $this;
     }
 
-    public function __debugInfo()
+    public function __debugInfo():array
     {
         $info = parent::__debugInfo();
 

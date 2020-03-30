@@ -1,6 +1,7 @@
 <?php
 namespace Prefs\Model\Table;
 
+use Cake\Database\Schema\TableSchemaInterface;
 use Prefs\Model\Entity\Preference;
 use Cake\Database\Schema\TableSchema;
 use Cake\ORM\Query;
@@ -34,7 +35,7 @@ class PreferencesTable extends Table
      * @param array $config The configuration for the Table.
      * @return void
      */
-    public function initialize(array $config)
+    public function initialize(array $config):void
     {
         parent::initialize($config);
 
@@ -77,7 +78,7 @@ class PreferencesTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules)
+    public function buildRules(RulesChecker $rules):RulesChecker
     {
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
@@ -90,7 +91,7 @@ class PreferencesTable extends Table
      * @param \Cake\Database\Schema\TableSchema $schema The table definition fetched from database.
      * @return \Cake\Database\Schema\TableSchema the altered schema
      */
-    protected function _initializeSchema(TableSchema $schema)
+    protected function _initializeSchema(TableSchema $schema):TableSchemaInterface
     {
         $schema->setColumnType('prefs', 'json');
 
