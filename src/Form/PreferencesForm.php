@@ -1,8 +1,8 @@
 <?php
-namespace App\Form;
+namespace Prefs\Form;
 
-use App\Exception\BadPrefsImplementationException;
-use App\Model\Entity\Preference;
+use Prefs\Exception\BadPrefsImplementationException;
+use Prefs\Model\Entity\Preference;
 use Cake\Controller\Component\FlashComponent;
 use Cake\Form\Form;
 use Cake\Form\Schema;
