@@ -88,10 +88,10 @@ class PreferencesTable extends Table
     /**
      * Field prefs is json
      *
-     * @param \Cake\Database\Schema\TableSchema $schema The table definition fetched from database.
-     * @return \Cake\Database\Schema\TableSchema the altered schema
+     * @param \Cake\Database\Schema\TableSchemaInterface  $schema The table definition fetched from database.
+     * @return \Cake\Database\Schema\TableSchemaInterface the altered schema
      */
-    protected function _initializeSchema(TableSchema $schema):TableSchemaInterface
+    protected function _initializeSchema(TableSchemaInterface $schema): TableSchemaInterface
     {
         $schema->setColumnType('prefs', 'json');
 
