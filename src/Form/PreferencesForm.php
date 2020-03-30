@@ -187,7 +187,7 @@ class PreferencesForm extends Form
         return $result;
     }
 
-    public function validationDefault(Validator $validator)
+    public function validationDefault(Validator $validator):Validator
     {
         return parent::validationDefault($validator);
     }

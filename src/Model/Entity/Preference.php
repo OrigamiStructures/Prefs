@@ -157,7 +157,7 @@ class Preference extends Entity
         return $this->user_id;
     }
 
-    public function __debugInfo()
+    public function __debugInfo():array
     {
         $data = [
             'defaults' => $this->defaults
