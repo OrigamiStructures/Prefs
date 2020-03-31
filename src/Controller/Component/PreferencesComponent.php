@@ -318,7 +318,7 @@ class PreferencesComponent extends Component
     private function repository()
     {
         if ($this->repository === false) {
-            $this->repository = TableRegistry::getTableLocator()->get('Preferences');
+            $this->repository = TableRegistry::getTableLocator()->get('Prefs.Preferences');
         }
         return $this->repository;
     }
