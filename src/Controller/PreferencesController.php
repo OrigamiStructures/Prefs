@@ -10,7 +10,11 @@ use Cake\ORM\Query;
 class PreferencesController extends AppController
 {
 
-    public $components = ['Preferences'];
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Preferences');
+    }
 
     /**
      * This will not be accessible for the API
