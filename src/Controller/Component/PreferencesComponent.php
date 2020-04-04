@@ -216,8 +216,16 @@ class PreferencesComponent extends Component
         //if the prefs list changed during filtering, save the corrected version
         if ($UserPrefs->getVariants() != $prefs) {
             $UserPrefs->setVariants($prefs);
-            (TableRegistry::getTableLocator()->get('Preferences'))
-                ->save($UserPrefs);
+            $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
+            $PrefsTable
+                ->save($PrefsTable->patchEntity(
+                    $UserPrefs,
+                    $prefs == []
+                        ? [
+                            'prefs' => [],
+                            'id' => $UserPrefs->id
+                          ]
+                        : $prefs));
         }
         return $UserPrefs;
     }
