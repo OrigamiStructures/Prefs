@@ -174,6 +174,10 @@ class PreferencesComponent extends Component
      *
      * fully stocked with all the default settings and user variants
      *
+     * @todo test that changing the defaults in the implementation
+     *      clears the corresponding value in the entity when the
+     *      values overlap
+     *
      * @param $user_id
      * @return Preference
      */
