@@ -1,6 +1,7 @@
 <?php
 namespace Prefs\Controller\Component;
 
+use PHPUnit\Exception;
 use Prefs\Controller\AppController;
 use Prefs\Form\PreferencesForm;
 use Prefs\Lib\PrefsBase;
@@ -35,13 +36,6 @@ class PreferencesComponent extends Component
      * @var array Components used by this component
      */
     public $components = ['Flash'];
-
-    /**
-     * A user override class for the Form if provided
-     *
-     * @var bool|string
-     */
-    private $formClass = false;
 
     protected $Form = false;
 
@@ -138,19 +132,6 @@ class PreferencesComponent extends Component
             $this->Flash->error('Your preferences were no reset. Please try again');
         }
         return;
-    }
-
-    /**
-     * Fully namespaced name of an override PreferencesForm class
-     *
-     * Normally LocalPreferencesForm extends PreferencesForm is used.
-     * But any MyPrefForm extends PreferencesForm can be substituted
-     *
-     * @param $formClass
-     */
-    public function setFormClass($formClass)
-    {
-        $this->formClass = $formClass;
     }
 
     /**
@@ -307,11 +288,7 @@ class PreferencesComponent extends Component
             //Return already established class
             return $this->Form;
         }
-        if (!$this->formClass == false) {
-            //Create new instance of already established classname
-            $class = $this->formClass;
-            $PreferenceForm = new $class();
-        } else {
+        else {
             //Create new class from configuration
             /* @var PreferencesForm $concretePrefsForm*/
             $concretePrefsForm = $this->getConfig('concretePrefsForm');
@@ -372,6 +349,9 @@ class PreferencesComponent extends Component
      * @todo clarify returning object as the concrete instantiation of prefs base
      *
      * @param $user_id null|string null will get full default objects
+     *
+     * @return PrefsBase
+     * @throws BadMethodCallException
      */
     public function getPrefs($user_id = null) : PrefsBase
     {
