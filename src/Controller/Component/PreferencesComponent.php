@@ -304,6 +304,8 @@ class PreferencesComponent extends Component
     }
 
     /**
+     * Saves prefs changes and emits Flash messages describing the result
+     *
      * @param $post
      * @param Preference $prefs
      */
