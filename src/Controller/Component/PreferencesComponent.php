@@ -26,13 +26,6 @@ class PreferencesComponent extends Component
 {
 
     /**
-     * A reference to the Preferences table object
-     *
-     * @var bool|PreferencesTable
-     */
-    private $repository = false;
-
-    /**
      * @var array Components used by this component
      */
     public $components = ['Flash'];
@@ -121,12 +114,13 @@ class PreferencesComponent extends Component
     public function clearPrefs($user_id)
     {
         //read the persisted prefs
-        $prefs = $this->repository()->getPreferencesFor($user_id);
+        $repository = $this->repository();
+        $prefs = $repository->getPreferencesFor($user_id);
         /* @var Preference $prefs */
 
-        $prefs = $this->repository()->patchEntity($prefs, ['prefs' => []]);
+        $prefs = $repository->patchEntity($prefs, ['prefs' => []]);
 
-        if ($this->repository()->save($prefs)) {
+        if ($repository->save($prefs)) {
             $this->Flash->success('Your preferences were reset to the default values.');
         } else {
             $this->Flash->error('Your preferences were no reset. Please try again');
@@ -306,10 +300,7 @@ class PreferencesComponent extends Component
      */
     private function repository()
     {
-        if ($this->repository === false) {
-            $this->repository = TableRegistry::getTableLocator()->get('Prefs.Preferences');
-        }
-        return $this->repository;
+        return TableRegistry::getTableLocator()->get('Prefs.Preferences');
     }
 
     /**
