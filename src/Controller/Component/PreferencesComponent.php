@@ -46,11 +46,11 @@ class PreferencesComponent extends Component
     protected $Form = false;
 
     /**
-     * Prefs objects that have been created index by the id that made them
-     *
+     * Prefs object
+     *s
      * @var array
      */
-    protected $registry = [];
+    protected $registry = false;
 
     protected $Prefs = [];
 
@@ -376,20 +376,17 @@ class PreferencesComponent extends Component
     public function getPrefs($user_id = null) : PrefsBase
     {
 
-        /*
-         * @todo kill registry. use property and separate, aliased components
-         */
-        if (!isset($this->registry[$user_id])) {
+        if (!$this->registry) {
             $entity = $this->getUserPrefsEntity($user_id);
 
             /* @var PrefsBase $prefsWrapper */
             $prefsWrapper = $this->getConfig('prefsWrapper');
 
-            $this->registry[$user_id] = new $prefsWrapper(
+            $this->registry = new $prefsWrapper(
                 $entity,
                 $this->getFormContextObject($user_id, $entity->getVariants())
             );
         }
-        return $this->registry[$user_id];
+        return $this->registry;
     }
 }
