@@ -37,14 +37,28 @@ class PreferencesComponentTest extends TestCase
         PersonFactory::make(1)
             ->withUser()
             ->persist();
+    }
 
+    public function testConstruction()
+    {
+        PersonFactory::make(1)
+            ->withUser()
+            ->persist();
 
-//        $this->Component->getPrefs(1);
+        $this->assertInstanceOf(PreferencesComponent::class, $this->Component);
+
+        $Prefs = $this->Component->getPrefs(1);
+        $this->assertInstanceOf(PrefsBase::class, $Prefs);
+
+        $Entity = $Prefs->getEntity();
+        $this->assertInstanceOf(Preference::class, $Entity);
+
+        $Form = $Prefs->getForm();
+        $this->assertInstanceOf(PrefForm::class, $Form);
     }
 
     public function testFor()
     {
-        $this->assertInstanceOf(PreferencesComponent::class, $this->Component);
     }
 
     public function testGetEntity()
