@@ -7,9 +7,10 @@ use App\Lib\Prefs;
 use Cake\Event\EventManager;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Prefs\Form\PreferencesForm;
 use Prefs\Lib\PrefsBase;
 
-class PrefForm extends PrefsBase
+class PrefForm extends PreferencesForm
 {
     /**
      * @var bool|Prefs
@@ -25,6 +26,7 @@ class PrefForm extends PrefsBase
             ],
         ],
     ];
+
     public function __construct(EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
