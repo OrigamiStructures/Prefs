@@ -55,6 +55,12 @@ class PreferencesComponent extends Component
     }
 
     /**
+     * Process a request to update persisted preference data
+     *
+     * Uses the Form object and its schema to validate the data.
+     * Any values that match schema defaults will not be persisted.
+     * Flash messages are prepared to let the user know how the
+     * request went and what was saved.
      *
      * @return Preference
      * @throws BadMethodCallException
