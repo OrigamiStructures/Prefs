@@ -1,15 +1,12 @@
 <?php
 namespace Prefs\Controller\Component;
 
-use PHPUnit\Exception;
-use Prefs\Controller\AppController;
+use Cake\ORM\Table;
 use Prefs\Form\PreferencesForm;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
 use Prefs\Model\Table\PreferencesTable;
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
-use Cake\Core\App;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Utility\Text;
@@ -40,6 +37,10 @@ class PreferencesComponent extends Component
     protected $registry = false;
 
     protected $Prefs = [];
+    /**
+     * @var Component|null
+     */
+    private $user_id;
 
     /**
      * Using this component will automatically make PreferencesHelper available
@@ -77,9 +78,9 @@ class PreferencesComponent extends Component
                     // and we prefer post if its different than variant
                     $postValue = Hash::get($post, $path);
                     $variantValue = Hash::get($userVariants, $path);
-                    if ( $postValue == $prefsDefaults[$path]) {
-                        //let variant evaporate
-                    } elseif (!is_null($variantValue) ||  !is_null($postValue)) {
+                    if (
+                        $postValue != $prefsDefaults[$path]
+                        && (!is_null($variantValue) ||  !is_null($postValue))) {
                         $accum = Hash::insert(
                             $accum,
                             $path,
@@ -109,7 +110,8 @@ class PreferencesComponent extends Component
     /**
      * Unset one user preference
      *
-     * @param $path
+     * @param $user_id
+     * @noinspection PhpUnused
      */
     public function clearPrefs($user_id)
     {
@@ -134,7 +136,8 @@ class PreferencesComponent extends Component
      * The object will carry all user settings to the form as values
      *
      * @param $user_id
-     * @return LocalPreferencesForm
+     * @param array $variants
+     * @return PreferencesForm
      */
     protected function getFormContextObject($user_id = null, $variants = [])
     {
@@ -274,7 +277,7 @@ class PreferencesComponent extends Component
     /**
      * This object knows the schema but nothing about the users settings
      *
-     * @return PreferencesForm|LocalPreferencesForm
+     * @return PreferencesForm
      */
     protected function getFormObjet()
     {
@@ -296,7 +299,7 @@ class PreferencesComponent extends Component
     /**
      * Get the Preferences table instance
      *
-     * @return PreferencesTable
+     * @return Table
      */
     private function repository()
     {
