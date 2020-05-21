@@ -21,9 +21,9 @@ use Faker\Generator;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 
 /**
- * preferenceFactory
+ * PersonFactory
  */
-class preferenceFactory extends CakephpBaseFactory
+class PersonFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -31,7 +31,7 @@ class preferenceFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'preferences';
+        return 'People';
     }
 
     /**

@@ -15,15 +15,15 @@ declare(strict_types=1);
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace Prefs\Test\Factory;
+namespace App\Test\Factory;
 
 use Faker\Generator;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 
 /**
- * userFactory
+ * UserFactory
  */
-class userFactory extends CakephpBaseFactory
+class UserFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -31,7 +31,7 @@ class userFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Prefs.users';
+        return 'Users';
     }
 
     /**
@@ -48,6 +48,27 @@ class userFactory extends CakephpBaseFactory
                 // 'name' => $faker->lastName
             ];
         });
+    }
+
+    /**
+     * @param array $parameter
+     * @return UserFactory
+     */
+    public function withPeople(array $parameter = null): UserFactory
+    {
+        return $this->with('People', \App\Test\Factory\PersonFactory::make($parameter));
+    }
+
+    /**
+    * @param array $parameter
+    * @param int $n
+    * @return UserFactory
+    */
+    public function withPreferences(array $parameter = null, int $n = 1): UserFactory
+    {
+        return $this
+            ->with('Preferences', \App\Test\Factory\PreferenceFactory::make($parameter, $n)
+            ->without('User'));
     }
 
 }
