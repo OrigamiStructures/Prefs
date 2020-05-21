@@ -54,8 +54,10 @@ class Preference extends Entity
      * @throws BadPrefsEntityConfigurationException
      * @throws UnknownPreferenceKeyException
      */
-    public function for($path)
+    public function for($path, $rootCol = 'prefs.')
     {
+        $path = $rootCol.$path;
+
         $this->validateStructure();
         $this->validatePath($path);
         return Hash::get($this->prefs ?? [], $path) ?? $this->defaults[$path];
@@ -127,8 +129,10 @@ class Preference extends Entity
      * @param $path
      * @param $value
      */
-    public function setVariant($path, $value)
+    public function setVariant($path, $value, $rootCol = 'prefs.')
     {
+        $path = $rootCol.$path;
+
         $this->prefs = Hash::insert($this->prefs ?? [], $path, $value);
     }
 
@@ -138,8 +142,10 @@ class Preference extends Entity
      * @param $path
      * @return mixed
      */
-    public function getVariant($path)
+    public function getVariant($path, $rootCol = 'prefs.')
     {
+        $path = $rootCol.$path;
+
         return Hash::get($this->prefs ?? [], $path);
     }
 
