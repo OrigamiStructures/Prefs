@@ -33,7 +33,8 @@ class PreferencesSystemTest extends TestCase
         $registry = new ComponentRegistry($controller);
         $this->Component = new PreferencesComponent($registry, [
             'concretePrefsForm' => PrefForm::class,
-            'prefsWrapper' => PrefsBase::class]);
+            'prefsWrapper' => PrefsBase::class,
+            'linkId' => 1]);
         PersonFactory::make(1)
             ->withUser()
             ->persist();
@@ -78,7 +79,7 @@ class PreferencesSystemTest extends TestCase
             ->withUser()
             ->persist();
         $prefs = $this->Component
-            ->getPrefs(1)
+            ->getPrefs()
             ->getEntity();
 
         $prefs->setVariant('value', 'new value of value');
@@ -92,7 +93,7 @@ class PreferencesSystemTest extends TestCase
             ->withUser()
             ->persist();
         $prefs = $this->Component
-            ->getPrefs(1)
+            ->getPrefs()
             ->getEntity();
 
         $prefs->setVariant('value', 'new value of value');
@@ -107,9 +108,16 @@ class PreferencesSystemTest extends TestCase
             ->withUser()
             ->persist();
         $prefs = $this->Component
-            ->getPrefs(1)
+            ->getPrefs()
             ->getEntity();
-        var_export($prefs->getDefaults());
+
+        $expected = [
+            'prefs.value' => 'value-value',
+            'prefs.nested.value' => 'nested-value-value',
+        ];
+
+        $this->assertEquals($expected, $prefs->getDefaults());
+
     }
     //</editor-fold>
 
@@ -120,7 +128,7 @@ class PreferencesSystemTest extends TestCase
             ->withUser()
             ->persist();
         $prefs = $this->Component
-            ->getPrefs(1);
+            ->getPrefs();
 
         $this->assertEquals('value-value', $prefs->for('value'));
         $this->assertEquals('nested-value-value', $prefs->for('nested.value'));

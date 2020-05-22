@@ -366,18 +366,18 @@ class PreferencesComponent extends Component
      * @return PrefsBase
      * @throws BadMethodCallException
      */
-    public function getPrefs($user_id = null) : PrefsBase
+    public function getPrefs() : PrefsBase
     {
 
         if (!$this->registry) {
-            $entity = $this->getUserPrefsEntity($user_id);
+            $entity = $this->getUserPrefsEntity();
 
             /* @var PrefsBase $prefsWrapper */
             $prefsWrapper = $this->getConfig('prefsWrapper');
 
             $this->registry = new $prefsWrapper(
                 $entity,
-                $this->getFormContextObject($user_id, $entity->getVariants())
+                $this->getFormContextObject($this->getLinkId(), $entity->getVariants())
             );
         }
         return $this->registry;
