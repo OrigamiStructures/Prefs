@@ -126,9 +126,9 @@ class Preference extends Entity
     /**
      * Insert (or overwrite) a value in the user's preferences
      *
-     * @param $path
-     * @param $value
-     * @param string $rootCol
+     * @param $path string path to a value once $rootCol is appended
+     * @param $value mixed the value to store
+     * @param string $rootCol defaults to 'prefs.'
      */
     public function setVariant($path, $value, $rootCol = 'prefs.')
     {
@@ -140,8 +140,8 @@ class Preference extends Entity
     /**
      * Get a single user value or null if they haven't moved from default
      *
-     * @param $path
-     * @param string $rootCol
+     * @param $path string path to a value once $rootCol is appended
+     * @param string $rootCol defaults to 'prefs.'
      * @return mixed
      */
     public function getVariant($path, $rootCol = 'prefs.')

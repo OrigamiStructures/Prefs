@@ -28,7 +28,6 @@ class PreferencesController extends AppController
         }
 
         $this->Preferences->setPrefs();
-
         return $this->redirect($this->referer());
     }
 }

@@ -168,15 +168,12 @@ class PreferencesComponent extends Component
     protected function getUserPrefsEntity($user_id)
     {
 
-//        return $this->getFormObjet()->getUsersPrefsEntity($user_id);
-
         /* @var  Preference $userPrefs */
         /* @var PreferencesForm $Form */
         /* @var PreferencesTable $PrefsTable */
 
         /* @todo property is never useed */
         /* @todo $user_id is never null */
-        $this->user_id = $user_id;
         if (is_null($user_id)) {
             $UserPrefs = new Preference([]);
         } else {
@@ -188,14 +185,15 @@ class PreferencesComponent extends Component
         $schema = $this->getFormObjet()->schema();
         $defaults = [];
         $prefs = [];
+//        $flatVariants = Hash::flatten($UserPrefs->getVariants());
 
         //Make a list of all default values
         //And filter any invalid prefs out of the json object
         foreach ($schema->fields() as $path) {
             $defaultValue = $schema->field($path)['default'];
             $defaults[$path] = $defaultValue;
-            if (!in_array($UserPrefs->getVariant($path), [null, $defaultValue])) {
-                $prefs = Hash::insert($prefs, $path, $UserPrefs->getVariant($path));
+            if (!in_array($UserPrefs->getVariant($path, ''), [null, $defaultValue])) {
+                $prefs = Hash::insert($prefs, $path, $UserPrefs->getVariant($path, ''));
             }
         }
         //set the default values into the entity
@@ -204,6 +202,7 @@ class PreferencesComponent extends Component
         //if the prefs list changed during filtering, save the corrected version
         if ($UserPrefs->getVariants() != $prefs) {
             $UserPrefs->setVariants($prefs);
+
             $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
             $PrefsTable
                 ->save($PrefsTable->patchEntity(
