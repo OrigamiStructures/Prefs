@@ -5,6 +5,7 @@ use Prefs\Exception\BadPrefsEntityConfigurationException;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 use Prefs\Exception\UnknownPreferenceKeyException;
+use Cake\I18n\FrozenTime;
 
 /**
  * Preference Entity
@@ -15,9 +16,9 @@ use Prefs\Exception\UnknownPreferenceKeyException;
  * These methods will set the $this::defaults property
  *
  * @property int $id
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime $modified
- * @property json $prefs
+ * @property FrozenTime|null $created
+ * @property FrozenTime $modified
+ * @property array $prefs
  * @property string $user_id
  *
  */
@@ -50,9 +51,8 @@ class Preference extends Entity
      * Will use the user's value if present, otherwise, the default value
      *
      * @param $path
+     * @param string $rootCol
      * @return mixed
-     * @throws BadPrefsEntityConfigurationException
-     * @throws UnknownPreferenceKeyException
      */
     public function for($path, $rootCol = 'prefs.')
     {
@@ -128,6 +128,7 @@ class Preference extends Entity
      *
      * @param $path
      * @param $value
+     * @param string $rootCol
      */
     public function setVariant($path, $value, $rootCol = 'prefs.')
     {
@@ -140,6 +141,7 @@ class Preference extends Entity
      * Get a single user value or null if they haven't moved from default
      *
      * @param $path
+     * @param string $rootCol
      * @return mixed
      */
     public function getVariant($path, $rootCol = 'prefs.')
@@ -153,6 +155,7 @@ class Preference extends Entity
      * get the user id
      *
      * @return string
+     * @noinspection PhpUnused
      */
     public function getUserId()
     {
