@@ -27,6 +27,9 @@ class PreferencesComponent extends Component
      */
     public $components = ['Flash'];
 
+    /**
+     * @var PreferencesForm
+     */
     protected $Form = false;
 
     /**
@@ -37,10 +40,12 @@ class PreferencesComponent extends Component
     protected $registry = false;
 
     protected $Prefs = [];
+
     /**
-     * @var Component|null
+     * @var bool|string|int|callable
      */
-    private $user_id;
+    protected $LinkId = false;
+
 
     /**
      * Using this component will automatically make PreferencesHelper available
@@ -52,6 +57,32 @@ class PreferencesComponent extends Component
         parent::initialize($config);
         $this->getController()->viewBuilder()->setHelpers(['Prefs.Preferences']);
         $this->setConfig('concretePrefsForm', $config['concretePrefsForm']);
+        if(isset($config['linkId'])) {
+            $this->LinkId = $config['linkId'];
+        }
+    }
+
+    /**
+     * Discover the id of the user-owner of the prefs
+     *
+     * This is a user_id used to retrieve a Preference record
+     *
+     * Assumed to be AuthMiddleware Identity but config allows
+     * injection of a value or callable alternative
+     *
+     * @return string
+     */
+    protected function getLinkId()
+    {
+        if(!$this->LinkId) {
+            return $this->getController()->getIdentity()->getIdentifier();
+        }
+        elseif (is_callable($this->LinkId)) {
+            return ($this->LinkId)();
+        }
+        else {
+            return $this->LinkId;
+        }
     }
 
     /**
@@ -69,7 +100,7 @@ class PreferencesComponent extends Component
     {
         $post = $this->getController()->getRequest()->getData();
         $form = $this->getFormObjet();
-        $entity = $this->repository()->getPreferencesFor($post['id']);
+        $entity = $this->repository()->getPreferencesFor($this->getLinkId());
 
         if ($form->validate($post)) {
             $userVariants = $entity->getVariants();
@@ -116,14 +147,13 @@ class PreferencesComponent extends Component
     /**
      * Unset one user preference
      *
-     * @param $user_id
      * @noinspection PhpUnused
      */
-    public function clearPrefs($user_id)
+    public function clearPrefs()
     {
         //read the persisted prefs
         $repository = $this->repository();
-        $prefs = $repository->getPreferencesFor($user_id);
+        $prefs = $repository->getPreferencesFor($this->getLinkId());
         /* @var Preference $prefs */
 
         $prefs = $repository->patchEntity($prefs, ['prefs' => []]);
@@ -162,26 +192,18 @@ class PreferencesComponent extends Component
      *      clears the corresponding value in the entity when the
      *      values overlap
      *
-     * @param $user_id
      * @return Preference
      */
-    protected function getUserPrefsEntity($user_id)
+    protected function getUserPrefsEntity()
     {
 
         /* @var  Preference $userPrefs */
         /* @var PreferencesForm $Form */
         /* @var PreferencesTable $PrefsTable */
 
-        /* @todo property is never useed */
-        /* @todo $user_id is never null */
-        if (is_null($user_id)) {
-            $UserPrefs = new Preference([]);
-        } else {
-            $UserPrefs = TableRegistry::getTableLocator()->get('Prefs.Preferences')
-                ->getPreferencesFor($user_id);
-        }
+        $UserPrefs = TableRegistry::getTableLocator()->get('Prefs.Preferences')
+            ->getPreferencesFor($this->getLinkId());
 
-        /* @todo is there a lower impact way of getting schema than loading a Form object? */
         $schema = $this->getFormObjet()->schema();
         $defaults = [];
         $prefs = [];
@@ -227,17 +249,6 @@ class PreferencesComponent extends Component
     }
 
     /**
-     * Get the array of non-default settings for the user
-     *
-     * @param $user_id
-     * @return array
-     */
-    protected function getUserVariants($user_id)
-    {
-        return $this->getFormObjet()->getUsersPrefsEntity($user_id)->getVariants();
-    }
-
-    /**
      * Make a simple object with versions of the posted user prefs for messaging
      *
      * $post is posted data array
@@ -258,6 +269,7 @@ class PreferencesComponent extends Component
      *
      * @param array $post
      * @return \stdClass
+     * @noinspection PhpFullyQualifiedNameUsageInspection
      */
     private function summarizeSettings(array $post): \stdClass
     {
