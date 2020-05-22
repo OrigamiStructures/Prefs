@@ -100,6 +100,17 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals(null, $prefs->getVariant('nested.value'));
 
     }
+
+    public function testEntityGetDefaults()
+    {
+        PersonFactory::make(1)
+            ->withUser()
+            ->persist();
+        $prefs = $this->Component
+            ->getPrefs(1)
+            ->getEntity();
+        var_export($prefs->getDefaults());
+    }
     //</editor-fold>
 
     //<editor-fold desc="WRAPPER TESTS">
