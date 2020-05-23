@@ -34,7 +34,8 @@ class PreferencesSystemTest extends TestCase
         $this->Component = new PreferencesComponent($registry, [
             'concretePrefsForm' => PrefForm::class,
             'prefsWrapper' => PrefsBase::class,
-            'linkId' => 1]);
+            'linkId' => 1,
+        ]);
         PersonFactory::make(1)
             ->withUser()
             ->persist();
@@ -56,6 +57,11 @@ class PreferencesSystemTest extends TestCase
 
         $Form = $Prefs->getForm();
         $this->assertInstanceOf(PrefForm::class, $Form);
+
+        $this->assertEquals(1, $this->Component->getConfig('linkId'));
+        $this->Component->setConfig('linkId', 2);
+        $this->assertEquals(2, $this->Component->getConfig('linkId'));
+
     }
 
     //<editor-fold desc="ENTITY TESTS">

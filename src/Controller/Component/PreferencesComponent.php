@@ -46,6 +46,10 @@ class PreferencesComponent extends Component
      */
     protected $LinkId = false;
 
+    public $_defaultConfig = [
+        'linkId' => false,
+    ];
+
 
     /**
      * Using this component will automatically make PreferencesHelper available
@@ -57,8 +61,8 @@ class PreferencesComponent extends Component
         parent::initialize($config);
         $this->getController()->viewBuilder()->setHelpers(['Prefs.Preferences']);
         $this->setConfig('concretePrefsForm', $config['concretePrefsForm']);
-        if(isset($config['linkId'])) {
-            $this->LinkId = $config['linkId'];
+        if (isset($config['linkId'])) {
+            $this->setConfig('linkId', $config['linkId']);
         }
     }
 
@@ -74,14 +78,14 @@ class PreferencesComponent extends Component
      */
     protected function getLinkId()
     {
-        if(!$this->LinkId) {
+        if(!$this->getConfig('linkId')) {
             return $this->getController()->getIdentity()->getIdentifier();
         }
-        elseif (is_callable($this->LinkId)) {
-            return ($this->LinkId)();
+        elseif (is_callable($this->getConfig('linkId'))) {
+            return ($this->getConfig('linkId'))();
         }
         else {
-            return $this->LinkId;
+            return $this->getConfig('linkId');
         }
     }
 
