@@ -1,20 +1,14 @@
-<?php
+<?php /** @noinspection ALL */
 
 namespace Prefs\Test;
 
-use App\Constants\PrefCon;
-use App\Form\PreferencesForm;
-use App\Lib\Prefs;
-use App\Test\Factory\UserFactory;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
-use Cake\Form\Form;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Prefs\Controller\Component\PreferencesComponent;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
-use Prefs\Test\PrefForm;
 use App\Test\Factory\PrefsPersonFactory;
 
 class PreferencesSystemTest extends TestCase
@@ -49,7 +43,7 @@ class PreferencesSystemTest extends TestCase
 
         $this->assertInstanceOf(PreferencesComponent::class, $this->Component);
 
-        $Prefs = $this->Component->getPrefs(1);
+        $Prefs = $this->Component->getPrefs();
         $this->assertInstanceOf(PrefsBase::class, $Prefs);
 
         $Entity = $Prefs->getEntity();
