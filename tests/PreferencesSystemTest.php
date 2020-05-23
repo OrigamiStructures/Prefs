@@ -63,70 +63,7 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals(2, $this->Component->getConfig('linkId'));
 
     }
-
-    //<editor-fold desc="ENTITY TESTS">
-    public function testEntityFor()
-    {
-        PersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs(1)
-            ->getEntity();
-
-        $this->assertEquals('value-value', $prefs->for('value'));
-        $this->assertEquals('nested-value-value', $prefs->for('nested.value'));
-
-    }
-
-    public function testEntitySetVariant()
-    {
-        PersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs()
-            ->getEntity();
-
-        $prefs->setVariant('value', 'new value of value');
-        $this->assertEquals('new value of value', $prefs->for('value'));
-
-    }
-
-    public function testEntityGetVariant()
-    {
-        PersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs()
-            ->getEntity();
-
-        $prefs->setVariant('value', 'new value of value');
-        $this->assertEquals('new value of value', $prefs->getVariant('value'));
-        $this->assertEquals(null, $prefs->getVariant('nested.value'));
-
-    }
-
-    public function testEntityGetDefaults()
-    {
-        PersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs()
-            ->getEntity();
-
-        $expected = [
-            'prefs.value' => 'value-value',
-            'prefs.nested.value' => 'nested-value-value',
-        ];
-
-        $this->assertEquals($expected, $prefs->getDefaults());
-
-    }
-    //</editor-fold>
-
+    
     //<editor-fold desc="WRAPPER TESTS">
     public function testWrapperFor()
     {
