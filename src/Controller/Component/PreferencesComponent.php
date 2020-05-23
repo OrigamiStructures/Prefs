@@ -222,11 +222,18 @@ class PreferencesComponent extends Component
                 $prefs = Hash::insert($prefs, $path, $UserPrefs->getVariant($path, ''));
             }
         }
+
+        /**
+         * @todo saving a second pref deletes all prefs for some reason. I'm killing this
+         *      resave to fix it and because I think the reason for it was not
+         *      really all that necessary.
+         */
+        //{"prefs":{"paging":{"tenant":{"limit":null}},"empty_coms_count":"1"}}
         //set the default values into the entity
         $UserPrefs->setDefaults($defaults);
 
         //if the prefs list changed during filtering, save the corrected version
-        if ($UserPrefs->getVariants() != $prefs) {
+        if (false && $UserPrefs->getVariants() != $prefs) {
             $UserPrefs->setVariants($prefs);
 
             $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
