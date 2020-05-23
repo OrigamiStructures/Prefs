@@ -42,11 +42,7 @@ class PrefsBase
      */
     public function for($path)
     {
-        try {
-            return $this->getEntity()->for($path);
-        } catch (UnknownPreferenceKeyException $e) {
-            throw $e;
-        }
+        return $this->getEntity()->for($path);
     }
 
     /**

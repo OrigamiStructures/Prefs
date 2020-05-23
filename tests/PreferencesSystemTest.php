@@ -7,6 +7,7 @@ use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Prefs\Controller\Component\PreferencesComponent;
+use Prefs\Exception\UnknownPreferenceKeyException;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
 use App\Test\Factory\PrefsPersonFactory;
@@ -67,8 +68,13 @@ class PreferencesSystemTest extends TestCase
         $prefs = $this->Component
             ->getPrefs();
 
-        $this->assertEquals('value-value', $prefs->for('value'));
-        $this->assertEquals('nested-value-value', $prefs->for('nested.value'));
+        $this->assertEquals('value-value', $prefs->for('value'),
+            'Form::for() did not return expected simple value');
+        $this->assertEquals('nested-value-value', $prefs->for('nested.value'),
+            'Form::for() did not return expected nested value');
+        //failures
+        $this->assertEquals(null, $prefs->for('bad.path'),
+            'Form::for() did not return null for unknown path');
     }
     //</editor-fold>
 }
