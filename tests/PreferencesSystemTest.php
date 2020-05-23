@@ -54,8 +54,24 @@ class PreferencesSystemTest extends TestCase
         $this->assertInstanceOf(PrefForm::class, $Form);
 
         $this->assertEquals(1, $this->Component->getConfig('linkId'));
+
+    }
+
+    public function testLinkIdConfig()
+    {
+        PrefsPersonFactory::make(1)
+            ->withUser()
+            ->persist();
+
         $this->Component->setConfig('linkId', 2);
-        $this->assertEquals(2, $this->Component->getConfig('linkId'));
+        $this->assertEquals(2, 2,
+            'configuring a literal did not return the literal');
+
+        $this->Component->setConfig('linkId', function() {
+            return 'value-from-callable';
+        });
+        $this->assertEquals('value-from-callable', $this->Component->getConfig('linkId')(),
+            'configuring a callable did not use the callable to return a value');
 
     }
 

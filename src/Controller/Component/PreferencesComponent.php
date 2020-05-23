@@ -82,7 +82,8 @@ class PreferencesComponent extends Component
             return $this->getController()->getIdentity()->getIdentifier();
         }
         elseif (is_callable($this->getConfig('linkId'))) {
-            return ($this->getConfig('linkId'))();
+            var_export($this->getConfig('linkId'));
+            return $this->getConfig('linkId')();
         }
         else {
             return $this->getConfig('linkId');
