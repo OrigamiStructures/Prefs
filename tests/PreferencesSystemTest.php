@@ -10,7 +10,7 @@ use Prefs\Controller\Component\PreferencesComponent;
 use Prefs\Exception\UnknownPreferenceKeyException;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
-use App\Test\Factory\PrefsPersonFactory;
+use Prefs\Test\Factory\PrefsPersonFactory;
 
 class PreferencesSystemTest extends TestCase
 {

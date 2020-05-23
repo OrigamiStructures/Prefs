@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         1.0.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
-namespace App\Test\Factory;
+namespace Prefs\Test\Factory;
 
 use Faker\Generator;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
