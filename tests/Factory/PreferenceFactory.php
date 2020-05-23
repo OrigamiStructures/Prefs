@@ -52,9 +52,9 @@ class preferenceFactory extends CakephpBaseFactory
 
     /**
      * @param array $parameter
-     * @return PersonFactory
+     * @return PrefsPersonFactory
      */
-    public function withUser(array $parameter = null): PersonFactory
+    public function withUser(array $parameter = null): PrefsPersonFactory
     {
         return $this->with('User', \App\Test\Factory\UserFactory::make($parameter));
     }

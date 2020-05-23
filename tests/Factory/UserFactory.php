@@ -56,7 +56,7 @@ class UserFactory extends CakephpBaseFactory
      */
     public function withPeople(array $parameter = null): UserFactory
     {
-        return $this->with('People', \App\Test\Factory\PersonFactory::make($parameter));
+        return $this->with('People', \App\Test\Factory\PrefsPersonFactory::make($parameter));
     }
 
     /**

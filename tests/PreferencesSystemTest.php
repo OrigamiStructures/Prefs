@@ -15,7 +15,7 @@ use Prefs\Controller\Component\PreferencesComponent;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
 use Prefs\Test\PrefForm;
-use App\Test\Factory\PersonFactory;
+use App\Test\Factory\PrefsPersonFactory;
 
 class PreferencesSystemTest extends TestCase
 {
@@ -36,14 +36,14 @@ class PreferencesSystemTest extends TestCase
             'prefsWrapper' => PrefsBase::class,
             'linkId' => 1,
         ]);
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
     }
 
     public function testConstruction()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
 
@@ -63,11 +63,11 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals(2, $this->Component->getConfig('linkId'));
 
     }
-    
+
     //<editor-fold desc="WRAPPER TESTS">
     public function testWrapperFor()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component

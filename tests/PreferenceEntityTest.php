@@ -1,23 +1,16 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 namespace Prefs\Test;
 
-use App\Constants\PrefCon;
-use App\Form\PreferencesForm;
-use App\Lib\Prefs;
-use App\Test\Factory\UserFactory;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
-use Cake\Form\Form;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Prefs\Controller\Component\PreferencesComponent;
 use Prefs\Lib\PrefsBase;
-use Prefs\Model\Entity\Preference;
-use Prefs\Test\PrefForm;
-use App\Test\Factory\PersonFactory;
+use App\Test\Factory\PrefsPersonFactory;
 
-class PreferencesEntitTest extends TestCase
+class PreferenceEntityTest extends TestCase
 {
 
     /**
@@ -36,18 +29,18 @@ class PreferencesEntitTest extends TestCase
             'prefsWrapper' => PrefsBase::class,
             'linkId' => 1,
         ]);
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
     }
 
     public function testEntityFor()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component
-            ->getPrefs(1)
+            ->getPrefs()
             ->getEntity();
 
         $this->assertEquals('value-value', $prefs->for('value'));
@@ -57,7 +50,7 @@ class PreferencesEntitTest extends TestCase
 
     public function testEntitySetVariant()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component
@@ -71,7 +64,7 @@ class PreferencesEntitTest extends TestCase
 
     public function testEntityGetVariant()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component
@@ -86,7 +79,7 @@ class PreferencesEntitTest extends TestCase
 
     public function testEntityGetDefaults()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component

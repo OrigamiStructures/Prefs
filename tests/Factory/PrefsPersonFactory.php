@@ -23,7 +23,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 /**
  * PersonFactory
  */
-class PersonFactory extends CakephpBaseFactory
+class PrefsPersonFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -52,9 +52,9 @@ class PersonFactory extends CakephpBaseFactory
 
     /**
      * @param array $parameter
-     * @return PersonFactory
+     * @return PrefsPersonFactory
      */
-    public function withUser(array $parameter = null): PersonFactory
+    public function withUser(array $parameter = null): PrefsPersonFactory
     {
         return $this->with('User', \App\Test\Factory\UserFactory::make($parameter));
     }
