@@ -51,6 +51,7 @@ class PreferencesSystemTest extends TestCase
         unset($this->Component);
     }
 
+    //<editor-fold desc="WRAPPER TESTS">
     public function testConstruction()
     {
         PrefsPersonFactory::make(1)
@@ -73,6 +74,24 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals(2, $this->Component->getConfig('linkId'));
 
     }
+    public function testWrapperFor()
+    {
+        PrefsPersonFactory::make(1)
+            ->withUser()
+            ->persist();
+        $prefs = $this->Component
+            ->getPrefs();
+
+        $this->assertEquals('value-value', $prefs->for('value'),
+            'Form::for() did not return expected simple value');
+        $this->assertEquals('nested-value-value', $prefs->for('nested.value'),
+            'Form::for() did not return expected nested value');
+        //failures
+        $this->expectException(UnknownPreferenceKeyException::class);
+        $this->assertEquals(null, $prefs->for('bad.path'),
+            'Form::for() did not return null for unknown path');
+    }
+    //</editor-fold>
 
     /**
      * When the schema changes, the next time the entity loads it changes
@@ -92,7 +111,6 @@ class PreferencesSystemTest extends TestCase
             'prefs.expired.path' => 'expired-value' //path not in schema should evaporate
         ]])
             ->persist();
-//        sleep(60);
         $prefs = $this->Component
             ->getPrefs(1)
             ->getEntity();
@@ -101,23 +119,39 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals($expected, $prefs->getVariants());
     }
 
-    //<editor-fold desc="WRAPPER TESTS">
-    public function testWrapperFor()
+    public function testSetPrefsFirstVariantEver()
     {
         PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
+        PreferenceFactory::make(['prefs' => []])
+            ->persist();
         $prefs = $this->Component
-            ->getPrefs();
+            ->getPrefs(1)
+            ->getEntity();
 
-        $this->assertEquals('value-value', $prefs->for('value'),
-            'Form::for() did not return expected simple value');
-        $this->assertEquals('nested-value-value', $prefs->for('nested.value'),
-            'Form::for() did not return expected nested value');
-        //failures
-        $this->expectException(UnknownPreferenceKeyException::class);
-        $this->assertEquals(null, $prefs->for('bad.path'),
-            'Form::for() did not return null for unknown path');
+        $this->assertEquals([], $prefs->getVariants(),
+            'Test did not set up properly');
+
+        $postRequest = $this->createStub(ServerRequest::class);
+        $postRequest
+            ->method('getData')
+            ->willReturn([
+                'prefs' => [
+                    'value' => 'variant-value',
+                ]
+            ]);
+        $postRequest
+            ->method('is')
+            ->willReturn(true);
+        $this->Component->getController()->setRequest($postRequest);
+
+        $result = $this->Component->setPrefs();
+
+        var_export($result->getEntity()->getVariants());
+
+        $this->isInstanceOf(PrefsBase::class, $result);
+
     }
-    //</editor-fold>
+
 }
