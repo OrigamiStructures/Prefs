@@ -168,6 +168,7 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals('nested-value-value', $prefs->for('nested.value'),
             'Form::for() did not return expected nested value');
         //failures
+        $this->expectException(UnknownPreferenceKeyException::class);
         $this->assertEquals(null, $prefs->for('bad.path'),
             'Form::for() did not return null for unknown path');
     }
