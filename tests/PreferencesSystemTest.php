@@ -133,6 +133,9 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals([], $prefs->getVariants(),
             'Test did not set up properly');
 
+        /**
+         * Try saving one new value to the entity
+         */
         $postRequest = $this->createStub(ServerRequest::class);
         $postRequest
             ->method('getData')
@@ -141,16 +144,44 @@ class PreferencesSystemTest extends TestCase
                     'value' => 'variant-value',
                 ]
             ]);
-        $postRequest
-            ->method('is')
-            ->willReturn(true);
+        $postRequest->method('is')->willReturn(true);
         $this->Component->getController()->setRequest($postRequest);
 
         $result = $this->Component->setPrefs();
 
-        var_export($result->getEntity()->getVariants());
-
         $this->isInstanceOf(PrefsBase::class, $result);
+
+        $expected = [
+            'prefs' => [
+                'value' => 'variant-value',
+            ]
+        ];
+        $this->assertEquals($expected, $result->getEntity()->getVariants());
+
+        /**
+         * Try saving another value to the same entity
+         */
+        $postRequest = $this->createStub(ServerRequest::class);
+        $postRequest
+            ->method('getData')
+            ->willReturn([
+                'prefs' => [
+                    'nested' =>
+                        ['value' => 'variant-value'],
+                ]
+            ]);
+        $postRequest->method('is')->willReturn(true);
+        $this->Component->getController()->setRequest($postRequest);
+        
+        $result = $this->Component->setPrefs();
+        $expected = [
+            'prefs' => [
+                'nested' => ['value' => 'variant-value'],
+                'value' => 'variant-value',
+            ]
+        ];
+        $this->assertEquals($expected, $result->getEntity()->getVariants());
+
 
     }
 
