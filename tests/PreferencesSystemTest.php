@@ -24,9 +24,9 @@ class PreferencesSystemTest extends TestCase
     public $Component;
 
     public $fixtures = [
+        'Prefs\Test\Fixture\PreferencesFixture',
         'app.people',
         'app.users',
-//        'app.prefs.preferences'
     ];
 
     public function setUp() : void
