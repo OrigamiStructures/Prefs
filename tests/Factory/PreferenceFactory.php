@@ -42,7 +42,6 @@ class preferenceFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        var_export('something');
         $prefs = Hash::expand([
             'prefs.value' => 'variant-value-value',
             'prefs.nested.value' => 'variant-nested-value-value',
