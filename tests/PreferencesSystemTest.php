@@ -119,8 +119,9 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals($expected, $prefs->getVariants());
     }
 
-    public function testSetPrefsFirstVariantEver()
+    public function testSetPrefs()
     {
+        //<editor-fold desc="PREPARE DATA AND ENVIRONEMNT">
         PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
@@ -129,13 +130,13 @@ class PreferencesSystemTest extends TestCase
         $prefs = $this->Component
             ->getPrefs(1)
             ->getEntity();
+        //</editor-fold>
 
         $this->assertEquals([], $prefs->getVariants(),
             'Test did not set up properly');
 
-        /**
-         * Try saving one new value to the entity
-         */
+        /* Try saving one new value to the entity */
+        //<editor-fold desc="CONFIGURE STUB REQUEST">
         $postRequest = $this->createStub(ServerRequest::class);
         $postRequest
             ->method('getData')
@@ -146,21 +147,19 @@ class PreferencesSystemTest extends TestCase
             ]);
         $postRequest->method('is')->willReturn(true);
         $this->Component->getController()->setRequest($postRequest);
+        //</editor-fold>
 
         $result = $this->Component->setPrefs();
 
-        $this->isInstanceOf(PrefsBase::class, $result);
+        $this->isInstanceOf(PrefsBase::class, $result,
+            'A valid setPrefs request did not return the expected object');
 
-        $expected = [
-            'prefs' => [
-                'value' => 'variant-value',
-            ]
-        ];
-        $this->assertEquals($expected, $result->getEntity()->getVariants());
+        $expected = ['prefs' => ['value' => 'variant-value',]];
+        $this->assertEquals($expected, $result->getEntity()->getVariants(),
+            'A valid setPrefs request did not create the entity variant expected');
 
-        /**
-         * Try saving another value to the same entity
-         */
+        /** Try saving another value to the same entity */
+        //<editor-fold desc="CONFIGURE STUB REQUEST">
         $postRequest = $this->createStub(ServerRequest::class);
         $postRequest
             ->method('getData')
@@ -172,17 +171,16 @@ class PreferencesSystemTest extends TestCase
             ]);
         $postRequest->method('is')->willReturn(true);
         $this->Component->getController()->setRequest($postRequest);
-        
+        //</editor-fold>
+
         $result = $this->Component->setPrefs();
-        $expected = [
-            'prefs' => [
-                'nested' => ['value' => 'variant-value'],
-                'value' => 'variant-value',
-            ]
-        ];
-        $this->assertEquals($expected, $result->getEntity()->getVariants());
-
-
+        $expected = ['prefs' => [
+            'nested' => ['value' => 'variant-value'],
+            'value' => 'variant-value',
+        ]];
+        $this->assertEquals($expected, $result->getEntity()->getVariants(),
+            'An additional valid setPrefs request did not result in the
+            expected entity variants');
     }
 
 }
