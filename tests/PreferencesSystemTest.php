@@ -24,7 +24,7 @@ class PreferencesSystemTest extends TestCase
     public $Component;
 
     public $fixtures = [
-        'Prefs\Test\Fixture\PreferencesFixture',
+//        'Prefs\Test\Fixture\PreferencesFixture',
         'app.people',
         'app.users',
     ];
@@ -86,17 +86,19 @@ class PreferencesSystemTest extends TestCase
         PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
-        PreferenceFactory::make(1)
+        PreferenceFactory::make(['prefs' => [
+            'prefs.value' => 'variant-value-value', //variant should persist
+            'prefs.nested.value' => 'nested-value-value', //default matched value should evaporate
+            'prefs.expired.path' => 'expired-value' //path not in schema should evaporate
+        ]])
             ->persist();
+//        sleep(60);
         $prefs = $this->Component
             ->getPrefs(1)
             ->getEntity();
 
-        var_export($prefs->getVariants());
-
-//        sleep(60);
-//        var_export($prefs);
-        $this->assertEquals('nested-value-value', 'nested-value-value');
+        $expected = ['prefs' => ['value' => 'variant-value-value']];
+        $this->assertEquals($expected, $prefs->getVariants());
     }
 
     //<editor-fold desc="ENTITY TESTS">
