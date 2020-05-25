@@ -12,7 +12,7 @@ use Prefs\Exception\UnknownPreferenceKeyException;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
 use Prefs\Test\PrefForm;
-use Prefs\Test\Factory\PersonFactory;
+use Prefs\Test\Factory\PrefsPersonFactory;
 use Prefs\Test\Factory\PreferenceFactory;
 
 class PreferencesSystemTest extends TestCase
@@ -76,7 +76,7 @@ class PreferencesSystemTest extends TestCase
      */
     public function testSchemaChangeEffectsEntity()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         PreferenceFactory::make(1)
@@ -95,7 +95,7 @@ class PreferencesSystemTest extends TestCase
     //<editor-fold desc="ENTITY TESTS">
     public function testEntityFor()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component
@@ -109,7 +109,7 @@ class PreferencesSystemTest extends TestCase
 
     public function testEntitySetVariant()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component
@@ -123,7 +123,7 @@ class PreferencesSystemTest extends TestCase
 
     public function testEntityGetVariant()
     {
-        PersonFactory::make(1)
+        PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
         $prefs = $this->Component
