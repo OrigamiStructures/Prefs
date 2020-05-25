@@ -7,6 +7,7 @@ use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Prefs\Controller\Component\PreferencesComponent;
+use Prefs\Exception\UnknownPreferenceKeyException;
 use Prefs\Lib\PrefsBase;
 use Prefs\Test\Factory\PrefsPersonFactory;
 
@@ -50,6 +51,9 @@ class PreferenceEntityTest extends TestCase
         $this->assertEquals('value-value', $prefs->for('value'));
         $this->assertEquals('nested-value-value', $prefs->for('nested.value'));
 
+        $this->expectException(UnknownPreferenceKeyException::class);
+        $prefs->for('bad_path');
+
     }
 
     public function testEntitySetVariant()
@@ -62,7 +66,16 @@ class PreferenceEntityTest extends TestCase
             ->getEntity();
 
         $prefs->setVariant('value', 'new value of value');
-        $this->assertEquals('new value of value', $prefs->for('value'));
+        $this->assertEquals('new value of value', $prefs->for('value'),
+            'a valid change value could not be inserted in the variant list');
+
+        /**
+         * arbitraty, invalid insertions are allowed
+         */
+        $prefs->setVariant('insert.value', 'new value of value');
+        $result = $prefs->getVariants()['prefs']['insert']['value'];
+        $this->assertEquals('new value of value', $result,
+            'An arbitrary invalid node could not be added to the variant list');
 
     }
 
