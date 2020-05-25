@@ -2,6 +2,7 @@
 namespace Prefs\Model\Table;
 
 use Cake\Database\Schema\TableSchemaInterface;
+use Cake\Utility\Hash;
 use Prefs\Model\Entity\Preference;
 use Cake\Database\Schema\TableSchema;
 use Cake\ORM\Query;

@@ -17,13 +17,14 @@ declare(strict_types=1);
  */
 namespace Prefs\Test\Factory;
 
+use Cake\Utility\Hash;
 use Faker\Generator;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 
 /**
  * preferenceFactory
  */
-class preferenceFactory extends CakephpBaseFactory
+class PreferenceFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -41,11 +42,16 @@ class preferenceFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $this->setDefaultData(function(Generator $faker) {
+        var_export('something');
+        $prefs = Hash::expand([
+            'prefs.value' => 'value-value',
+            'prefs.nested.value' => 'nested-value-value',
+        ]);
+        $prefs = json_encode($prefs);
+        $this->setDefaultData(function(Generator $faker) use ($prefs) {
             return [
-                // set the model's default values
-                // For example:
-                // 'name' => $faker->lastName
+                'prefs' => $prefs,
+                'user_id' => 1
             ];
         });
     }
@@ -56,7 +62,7 @@ class preferenceFactory extends CakephpBaseFactory
      */
     public function withUser(array $parameter = null): PrefsPersonFactory
     {
-        return $this->with('User', \App\Test\Factory\UserFactory::make($parameter));
+        return $this->with('User', \Prefs\Test\Factory\UserFactory::make($parameter));
     }
 
 }

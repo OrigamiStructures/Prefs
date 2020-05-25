@@ -202,27 +202,31 @@ class PreferencesComponent extends Component
     protected function getUserPrefsEntity()
     {
 
-        /* @var  Preference $userPrefs */
+
+
+        /* @var Preference $UserPrefs */
         /* @var PreferencesForm $Form */
         /* @var PreferencesTable $PrefsTable */
 
         $UserPrefs = TableRegistry::getTableLocator()->get('Prefs.Preferences')
             ->getPreferencesFor($this->getLinkId());
 
-        $schema = $this->getFormObjet()->schema();
-        $defaults = [];
-        $prefs = [];
-//        $flatVariants = Hash::flatten($UserPrefs->getVariants());
+        $defaults = $this->getFormObjet()->getDefaults();
+        $stored_variants = Hash::flatten($UserPrefs->getVariants());
 
-        //Make a list of all default values
-        //And filter any invalid prefs out of the json object
-        foreach ($schema->fields() as $path) {
-            $defaultValue = $schema->field($path)['default'];
-            $defaults[$path] = $defaultValue;
-            if (!in_array($UserPrefs->getVariant($path, ''), [null, $defaultValue])) {
-                $prefs = Hash::insert($prefs, $path, $UserPrefs->getVariant($path, ''));
-            }
-        }
+        //set the default values into the entity
+        $UserPrefs->setDefaults($defaults);
+
+        $current_variants = collection($stored_variants)
+            ->reduce(function($accum, $variant, $key) use ($defaults) {
+                if (
+                    array_key_exists($key, $defaults)
+                    && (string) $variant != (string) $defaults[$key]
+                ) {
+                    $accum[$key] = $variant;
+                }
+                return $accum;
+            }, []);
 
         /**
          * @todo saving a second pref deletes all prefs for some reason. I'm killing this
@@ -230,23 +234,15 @@ class PreferencesComponent extends Component
          *      really all that necessary.
          */
         //{"prefs":{"paging":{"tenant":{"limit":null}},"empty_coms_count":"1"}}
-        //set the default values into the entity
-        $UserPrefs->setDefaults($defaults);
+        //{"prefs":{"paging":{"tenant":{"limit":null}},"empty_coms_count":"4"}}
+        //{"prefs":{"paging":{"tenant":{"limit":"3"}},"empty_coms_count":1}}
 
         //if the prefs list changed during filtering, save the corrected version
-        if (false && $UserPrefs->getVariants() != $prefs) {
-            $UserPrefs->setVariants($prefs);
-
-            $PrefsTable = TableRegistry::getTableLocator()->get('Preferences');
-            $PrefsTable
-                ->save($PrefsTable->patchEntity(
-                    $UserPrefs,
-                    $prefs == []
-                        ? [
-                            'prefs' => [],
-                            'id' => $UserPrefs->id
-                          ]
-                        : $prefs));
+        if ($current_variants !== $stored_variants) {
+            $UserPrefs->setVariants(Hash::expand($current_variants));
+            $UserPrefs->setDirty('prefs', true);
+            $PrefsTable = TableRegistry::getTableLocator()->get('Prefs.Preferences');
+            $PrefsTable->save($UserPrefs);
         }
         return $UserPrefs;
     }

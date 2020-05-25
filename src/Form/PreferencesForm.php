@@ -63,12 +63,9 @@ class PreferencesForm extends Form
 
         $prefDefaults = (collection($this->validPaths))
             ->reduce(function ($accum, $path) use ($schema) {
-//                if ($path != 'id') {
-                    $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
-//                }
+                $accum = Hash::insert($accum, $path, $schema->field($path)['default']);
                 return $accum;
             }, []);
-
         $this->defaults = Hash::flatten($prefDefaults);
         return $this;
     }

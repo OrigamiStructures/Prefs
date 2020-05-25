@@ -56,7 +56,7 @@ class PrefsPersonFactory extends CakephpBaseFactory
      */
     public function withUser(array $parameter = null): PrefsPersonFactory
     {
-        return $this->with('User', \App\Test\Factory\UserFactory::make($parameter));
+        return $this->with('User', \Prefs\Test\Factory\UserFactory::make($parameter));
     }
 
 }

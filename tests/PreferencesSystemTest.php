@@ -5,12 +5,15 @@ namespace Prefs\Test;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Http\ServerRequest;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Prefs\Controller\Component\PreferencesComponent;
 use Prefs\Exception\UnknownPreferenceKeyException;
 use Prefs\Lib\PrefsBase;
 use Prefs\Model\Entity\Preference;
-use Prefs\Test\Factory\PrefsPersonFactory;
+use Prefs\Test\PrefForm;
+use Prefs\Test\Factory\PersonFactory;
+use Prefs\Test\Factory\PreferenceFactory;
 
 class PreferencesSystemTest extends TestCase
 {
@@ -20,6 +23,11 @@ class PreferencesSystemTest extends TestCase
      */
     public $Component;
 
+    public $fixtures = [
+        'app.people',
+        'app.users',
+        'app.preferences'
+    ];
 
     public function setUp() : void
     {
@@ -54,6 +62,77 @@ class PreferencesSystemTest extends TestCase
         $this->assertInstanceOf(PrefForm::class, $Form);
 
         $this->assertEquals(1, $this->Component->getConfig('linkId'));
+        $this->Component->setConfig('linkId', 2);
+        $this->assertEquals(2, $this->Component->getConfig('linkId'));
+
+    }
+
+    /**
+     * When the schema changes, the next time the entity loads it changes
+     *
+     * The entity will drop any entries that are no longer included in the
+     * schema and any entries that are now set to a default value.
+     *
+     */
+    public function testSchemaChangeEffectsEntity()
+    {
+        PersonFactory::make(1)
+            ->withUser()
+            ->persist();
+        PreferenceFactory::make(1)
+            ->persist();
+        $prefs = $this->Component
+            ->getPrefs(1)
+            ->getEntity();
+
+        $t = TableRegistry::getTableLocator()->get('Preferences');
+        $record = $t->find()->toArray();
+        var_export($record);
+//        sleep(60);
+//        var_export($prefs);
+    }
+
+    //<editor-fold desc="ENTITY TESTS">
+    public function testEntityFor()
+    {
+        PersonFactory::make(1)
+            ->withUser()
+            ->persist();
+        $prefs = $this->Component
+            ->getPrefs(1)
+            ->getEntity();
+
+        $this->assertEquals('value-value', $prefs->for('value'));
+        $this->assertEquals('nested-value-value', $prefs->for('nested.value'));
+
+    }
+
+    public function testEntitySetVariant()
+    {
+        PersonFactory::make(1)
+            ->withUser()
+            ->persist();
+        $prefs = $this->Component
+            ->getPrefs()
+            ->getEntity();
+
+        $prefs->setVariant('value', 'new value of value');
+        $this->assertEquals('new value of value', $prefs->for('value'));
+
+    }
+
+    public function testEntityGetVariant()
+    {
+        PersonFactory::make(1)
+            ->withUser()
+            ->persist();
+        $prefs = $this->Component
+            ->getPrefs()
+            ->getEntity();
+
+        $prefs->setVariant('value', 'new value of value');
+        $this->assertEquals('new value of value', $prefs->getVariant('value'));
+        $this->assertEquals(null, $prefs->getVariant('nested.value'));
 
     }
 
