@@ -101,68 +101,6 @@ class PreferencesSystemTest extends TestCase
         $this->assertEquals($expected, $prefs->getVariants());
     }
 
-    //<editor-fold desc="ENTITY TESTS">
-    public function testEntityFor()
-    {
-        PrefsPersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs(1)
-            ->getEntity();
-
-        $this->assertEquals('value-value', $prefs->for('value'));
-        $this->assertEquals('nested-value-value', $prefs->for('nested.value'));
-
-    }
-
-    public function testEntitySetVariant()
-    {
-        PrefsPersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs()
-            ->getEntity();
-
-        $prefs->setVariant('value', 'new value of value');
-        $this->assertEquals('new value of value', $prefs->for('value'));
-
-    }
-
-    public function testEntityGetVariant()
-    {
-        PrefsPersonFactory::make(1)
-            ->withUser()
-            ->persist();
-        $prefs = $this->Component
-            ->getPrefs()
-            ->getEntity();
-
-        $prefs->setVariant('value', 'new value of value');
-        $this->assertEquals('new value of value', $prefs->getVariant('value'));
-        $this->assertEquals(null, $prefs->getVariant('nested.value'));
-
-    }
-
-    public function testLinkIdConfig()
-    {
-        PrefsPersonFactory::make(1)
-            ->withUser()
-            ->persist();
-
-        $this->Component->setConfig('linkId', 2);
-        $this->assertEquals(2, 2,
-            'configuring a literal did not return the literal');
-
-        $this->Component->setConfig('linkId', function() {
-            return 'value-from-callable';
-        });
-        $this->assertEquals('value-from-callable', $this->Component->getConfig('linkId')(),
-            'configuring a callable did not use the callable to return a value');
-
-    }
-
     //<editor-fold desc="WRAPPER TESTS">
     public function testWrapperFor()
     {
