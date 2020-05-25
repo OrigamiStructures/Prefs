@@ -26,7 +26,7 @@ class PreferencesSystemTest extends TestCase
     public $fixtures = [
         'app.people',
         'app.users',
-        'app.preferences'
+//        'app.prefs.preferences'
     ];
 
     public function setUp() : void
@@ -42,6 +42,13 @@ class PreferencesSystemTest extends TestCase
         PrefsPersonFactory::make(1)
             ->withUser()
             ->persist();
+    }
+
+    public function tearDown() : void
+    {
+        $t = TableRegistry::getTableLocator()->get('Preferences')
+            ->deleteAll([1 => 1]);
+        unset($this->Component);
     }
 
     public function testConstruction()
@@ -85,11 +92,11 @@ class PreferencesSystemTest extends TestCase
             ->getPrefs(1)
             ->getEntity();
 
-        $t = TableRegistry::getTableLocator()->get('Preferences');
-        $record = $t->find()->toArray();
-        var_export($record);
+        var_export($prefs->getVariants());
+
 //        sleep(60);
 //        var_export($prefs);
+        $this->assertEquals('nested-value-value', 'nested-value-value');
     }
 
     //<editor-fold desc="ENTITY TESTS">
