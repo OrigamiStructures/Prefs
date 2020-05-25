@@ -116,16 +116,16 @@ class PreferencesComponent extends Component
                     //if the post is default, leave variant out of the list
                     //if post is non-default, non-null
                     // or variant is non-null, variant must be included
-                    // and we prefer post if its different than variant
+                    // and we prefer post if its different than variant and not null
                     $postValue = Hash::get($post, $path);
                     $variantValue = Hash::get($userVariants, $path);
                     if (
                         $postValue != $prefsDefaults[$path]
-                        && (!is_null($variantValue) ||  !is_null($postValue))) {
+                        && (!is_null($variantValue) || !is_null($postValue))) {
                         $accum = Hash::insert(
                             $accum,
                             $path,
-                            $variantValue != $postValue ? $postValue : $variantValue
+                            $variantValue != $postValue ? $postValue ?? $variantValue : $variantValue
                         );
                     }
                     return $accum;
