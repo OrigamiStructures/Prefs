@@ -195,7 +195,7 @@ class Preference extends Entity
      */
     private function validatePath($path)
     {
-        if (Hash::check(array_keys($this->getDefaults()), $path)) {
+        if (!array_key_exists($path, $this->getDefaults())) {
             $msg = "The preference '$path' has not been defined in PreferencesTable::defaults yet.";
             throw new UnknownPreferenceKeyException($msg);
         }
