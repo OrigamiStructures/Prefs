@@ -191,19 +191,16 @@ class PreferencesComponent extends Component
     /**
      * Get the user's preference entity
      *
-     * fully stocked with all the default settings and user variants
-     *
-     * @todo test that changing the defaults in the implementation
-     *      clears the corresponding value in the entity when the
-     *      values overlap
+     * Fully stocked with all the default settings and user variants.
+     * This also insures that the entity will not include variants that
+     * are now defined as 'defaults' in the schema. Nor will they contain
+     * path=>value pairs for anything paths that have been deleted
+     * from the schema.
      *
      * @return Preference
      */
     protected function getUserPrefsEntity()
     {
-
-
-
         /* @var Preference $UserPrefs */
         /* @var PreferencesForm $Form */
         /* @var PreferencesTable $PrefsTable */
@@ -217,6 +214,7 @@ class PreferencesComponent extends Component
         //set the default values into the entity
         $UserPrefs->setDefaults($defaults);
 
+        //checked store variants against currently defined schema
         $current_variants = collection($stored_variants)
             ->reduce(function($accum, $variant, $key) use ($defaults) {
                 if (
@@ -228,16 +226,7 @@ class PreferencesComponent extends Component
                 return $accum;
             }, []);
 
-        /**
-         * @todo saving a second pref deletes all prefs for some reason. I'm killing this
-         *      resave to fix it and because I think the reason for it was not
-         *      really all that necessary.
-         */
-        //{"prefs":{"paging":{"tenant":{"limit":null}},"empty_coms_count":"1"}}
-        //{"prefs":{"paging":{"tenant":{"limit":null}},"empty_coms_count":"4"}}
-        //{"prefs":{"paging":{"tenant":{"limit":"3"}},"empty_coms_count":1}}
-
-        //if the prefs list changed during filtering, save the corrected version
+        //if the variant list changed during filtering, save the corrected version
         if ($current_variants !== $stored_variants) {
             $UserPrefs->setVariants(Hash::expand($current_variants));
             $UserPrefs->setDirty('prefs', true);
