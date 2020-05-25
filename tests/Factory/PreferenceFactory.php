@@ -17,14 +17,14 @@ declare(strict_types=1);
  */
 namespace Prefs\Test\Factory;
 
-use Cake\Utility\Hash;
 use Faker\Generator;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
+use Cake\Utility\Hash;
 
 /**
  * preferenceFactory
  */
-class PreferenceFactory extends CakephpBaseFactory
+class preferenceFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -32,7 +32,7 @@ class PreferenceFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'preferences';
+        return 'Prefs.preferences';
     }
 
     /**
@@ -44,10 +44,9 @@ class PreferenceFactory extends CakephpBaseFactory
     {
         var_export('something');
         $prefs = Hash::expand([
-            'prefs.value' => 'value-value',
-            'prefs.nested.value' => 'nested-value-value',
+            'prefs.value' => 'variant-value-value',
+            'prefs.nested.value' => 'variant-nested-value-value',
         ]);
-        $prefs = json_encode($prefs);
         $this->setDefaultData(function(Generator $faker) use ($prefs) {
             return [
                 'prefs' => $prefs,
@@ -58,11 +57,11 @@ class PreferenceFactory extends CakephpBaseFactory
 
     /**
      * @param array $parameter
-     * @return PrefsPersonFactory
+     * @return preferenceFactory
      */
-    public function withUser(array $parameter = null): PrefsPersonFactory
+    public function withUsers(array $parameter = null): preferenceFactory
     {
-        return $this->with('User', \Prefs\Test\Factory\UserFactory::make($parameter));
+        return $this->with('Users', UserFactory::make($parameter));
     }
 
 }
