@@ -8,7 +8,7 @@ use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Prefs\Controller\Component\PreferencesComponent;
 use Prefs\Lib\PrefsBase;
-use App\Test\Factory\PrefsPersonFactory;
+use Prefs\Test\Factory\PrefsPersonFactory;
 
 class PreferenceEntityTest extends TestCase
 {
@@ -18,6 +18,10 @@ class PreferenceEntityTest extends TestCase
      */
     public $Component;
 
+    public $fixtures = [
+        'app.people',
+        'app.users',
+    ];
 
     public function setUp() : void
     {
