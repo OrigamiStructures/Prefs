@@ -58,7 +58,7 @@ class PreferencesForm extends Form
     public function __construct(EventManager $eventManager = null)
     {
         parent::__construct($eventManager);
-        $schema = $this->schema();
+        $schema = $this->getSchema();
         $this->validPaths = $schema->fields() ?? [];
 
         $prefDefaults = (collection($this->validPaths))
@@ -213,7 +213,7 @@ class PreferencesForm extends Form
      */
     public function asContext($user_id, $variants)
     {
-        $schema = $this->schema();
+        $schema = $this->getSchema();
 
         $prefs = collection(Hash::flatten($variants));
         $overrides = $prefs->map(function($value, $fieldName) use ($schema) {
@@ -226,7 +226,7 @@ class PreferencesForm extends Form
         $idAttributes['default'] = $user_id;
         $overrides['id'] = $idAttributes;
 
-        $this->schema()->addFields($overrides);
+        $this->getSchema()->addFields($overrides);
 
         return $this;
     }
