@@ -19,10 +19,10 @@ class PreferenceEntityTest extends TestCase
      */
     public $Component;
 
-    public $fixtures = [
-        'app.people',
-        'app.users',
-    ];
+//    public $fixtures = [
+//        'app.people',
+//        'app.users',
+//    ];
 
     public function setUp() : void
     {

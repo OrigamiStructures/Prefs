@@ -17,6 +17,7 @@ declare(strict_types=1);
  */
 namespace Prefs\Test\Factory;
 
+use App\Constants\RoleCon;
 use Faker\Generator;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 
@@ -43,6 +44,9 @@ class PrefsPersonFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function(Generator $faker) {
             return [
+                'first_name' => $faker->firstName,
+                'role' => RoleCon::SYSTEM_ADMIN,
+                'modified' => time(),
                 // set the model's default values
                 // For example:
                 // 'name' => $faker->lastName

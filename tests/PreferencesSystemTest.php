@@ -23,11 +23,11 @@ class PreferencesSystemTest extends TestCase
      */
     public $Component;
 
-    public $fixtures = [
-//        'Prefs\Test\Fixture\PreferencesFixture',
-        'app.people',
-        'app.users',
-    ];
+//    public $fixtures = [
+////        'Prefs\Test\Fixture\PreferencesFixture',
+//        'app.people',
+//        'app.users',
+//    ];
 
     public function setUp() : void
     {

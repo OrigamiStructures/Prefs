@@ -43,6 +43,9 @@ class UserFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function(Generator $faker) {
             return [
+                'password' => 'xx',
+                'username' => $faker->email,
+                'modified' => time(),
                 // set the model's default values
                 // For example:
                 // 'name' => $faker->lastName
