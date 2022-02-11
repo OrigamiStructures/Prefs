@@ -59,7 +59,7 @@ class PreferencesComponent extends Component
     public function initialize(array $config):void
     {
         parent::initialize($config);
-        $this->getController()->viewBuilder()->setHelpers(['Prefs.Preferences']);
+        $this->getController()->viewBuilder()->addHelpers(['Prefs.Preferences']);
         $this->setConfig('concretePrefsForm', $config['concretePrefsForm']);
         if (isset($config['linkId'])) {
             $this->setConfig('linkId', $config['linkId']);

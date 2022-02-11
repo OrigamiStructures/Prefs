@@ -114,7 +114,7 @@ class PreferencesForm extends Form
      * @param array $data
      * @return bool
      */
-    public function validate($data):bool
+    public function validate(array $data, ?string $validator = NULL): bool
     {
         $result = parent::validate(Hash::flatten($data));
         $this->setErrors(Hash::expand($this->getErrors()));
